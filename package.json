@@ -1,0 +1,22 @@
+{
+  "name": "courtdesk",
+  "main": "index.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w @courtdesk/api",
+    "dev:admin": "npm run dev -w @courtdesk/admin",
+    "watch:shared": "npm run watch -w @courtdesk/shared",
+    "db:init": "npm run db:init -w @courtdesk/api",
+    "db:seed": "npm run db:seed -w @courtdesk/api",
+    "build:api": "npm run build -w @courtdesk/api",
+    "build:admin": "npm run build -w @courtdesk/admin",
+    "build:shared": "npm run build -w @courtdesk/shared",
+    "build": "npm run build --workspaces"
+  },
+  "author": "dojo",
+  "license": "ISC",
+  "type": "commonjs"
+}
