@@ -13,6 +13,7 @@ import {
   UuidSchema,
 } from "../common";
 import { CourtNameSchema } from "../courts";
+import { PaymentEntitySchema } from "../payments";
 
 // =======================================
 // Enum
@@ -48,7 +49,6 @@ export const ReservationEntitySchema = z.object({
   minimum_payment: MoneySchema,
 
   status: ReservationStatusSchema,
-  payment_status: PaymentStatusSchema,
 
   notes: NotesSchema.nullable(),
 
@@ -86,6 +86,8 @@ export const ReservationWithRelationsSchema = ReservationEntitySchema.omit({
       email: ReqEmailSchema,
     })
     .nullable(),
+
+  payments: z.array(PaymentEntitySchema),
 });
 
 // =======================================
