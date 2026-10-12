@@ -1,6 +1,6 @@
 export type ReadinessResult = {
   status: "ready" | "not_ready";
-  check: {
+  checks: {
     database: "up" | "down";
   };
 };

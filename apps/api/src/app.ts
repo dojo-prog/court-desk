@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { globalRateLimiter } from "./infrastructure/rate-limit/global-rate-limiter";
 
+import healthRouter from "@/modules/health/health.routes";
+
 const app = express();
 
 // Cors Config
@@ -29,6 +31,9 @@ app.use(cookieParser());
 
 // Global Rate Limiter
 app.use(globalRateLimiter);
+
+// Health Route
+app.use("/health", healthRouter);
 
 // Routers
 
