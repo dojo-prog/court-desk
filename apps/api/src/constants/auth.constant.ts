@@ -1,3 +1,5 @@
+import { ENV } from "@/config/env";
+
 export const AUTH_TOKENS = {
   ACCESS_TOKEN: {
     name: "access_token",
@@ -8,3 +10,9 @@ export const AUTH_TOKENS = {
     cookieMaxAge: 24 * 60 * 60 * 1000,
   },
 };
+
+export const baseCookieOptions = {
+  httpOnly: true,
+  secure: ENV.NODE_ENV === "production",
+  sameSite: ENV.NODE_ENV === "production" ? "none" : "strict",
+} as const;
