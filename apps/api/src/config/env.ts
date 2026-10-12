@@ -17,7 +17,7 @@ const getReqEnv = (name: string): string => {
 const getReqNumEnv = (name: string): number => {
   const raw = process.env[name];
 
-  if (raw) {
+  if (!raw) {
     throw new Error(`Missing required numeric env: ${name}`);
   }
 
