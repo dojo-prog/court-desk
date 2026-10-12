@@ -31,3 +31,5 @@ export const CustomerWithRelationsSchema = CustomerEntitySchema.extend({
 // =======================================
 
 export type CustomerEntity = z.infer<typeof CustomerEntitySchema>;
+
+export type CustomerWithRelations = z.infer<typeof CustomerWithRelationsSchema>;

@@ -8,6 +8,7 @@ import { globalRateLimiter } from "./infrastructure/rate-limit/global-rate-limit
 import healthRouter from "@/modules/health/health.routes";
 import authRouter from "@/modules/auth/auth.routes";
 import userRouter from "@/modules/users/user.routes";
+import customerRouter from "@/modules/customers/customer.routes";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/health", healthRouter);
 // Routers
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/customers", customerRouter);
 
 // Error Handler
 app.use(errorMiddleware);

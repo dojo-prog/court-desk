@@ -5,6 +5,7 @@ import {
   CreateCustomerBodySchema,
   CustomerIdParamsSchema,
   CustomerQuerySchema,
+  UpdateCustomerBodySchema,
 } from "@courtdesk/shared";
 import {
   createCustomerLimiter,
@@ -35,7 +36,10 @@ router
   )
   .patch(
     updateCustomerLimiter,
-    validate({ params: CustomerIdParamsSchema }),
+    validate({
+      params: CustomerIdParamsSchema,
+      body: UpdateCustomerBodySchema,
+    }),
     customerController.updateCustomer,
   )
   .get(

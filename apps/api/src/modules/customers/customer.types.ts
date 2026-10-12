@@ -1,5 +1,5 @@
 import { GetResult } from "@/types/common.types";
-import { CustomerEntity, UpdateCustomerBody } from "@courtdesk/shared";
+import { CustomerWithRelations, UpdateCustomerBody } from "@courtdesk/shared";
 
 // =======================================
 // Service Params
@@ -14,4 +14,4 @@ export type UpdateCustomerParams = {
 // Results
 // =======================================
 
-export type GetCustomersResult = GetResult<"customers", CustomerEntity>;
+export type GetCustomersResult = GetResult<"customers", CustomerWithRelations>;
