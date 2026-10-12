@@ -40,6 +40,29 @@ export const IsoDateSchema = z.iso.date({
   message: "Invalid iso date format",
 });
 
+export const IsoTimeSchema = z.iso.date({
+  message: "Invalid iso time format",
+});
+
+export const ReqIsoDateTimeSchema = z.iso
+  .datetime({
+    offset: true,
+    message: "Invalid iso datetime format",
+  })
+  .min(1, { message: "Datetime is required" });
+
+export const ReqIsoDateSchema = z.iso
+  .date({
+    message: "Invalid iso date format",
+  })
+  .min(1, { message: "Date is required" });
+
+export const ReqIsoTimeSchema = z.iso
+  .date({
+    message: "Invalid iso time format",
+  })
+  .min(1, { message: "Time is required" });
+
 export const ReqPhPhoneSchema = z
   .string()
   .min(1, { message: "Phone number is required" })

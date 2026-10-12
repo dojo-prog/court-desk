@@ -5,6 +5,8 @@ import {
   MoneySchema,
   NotesSchema,
   PaginationQuerySchema,
+  ReqIsoDateSchema,
+  ReqIsoTimeSchema,
   SearchQuerySchema,
   UuidSchema,
 } from "../common";
@@ -53,7 +55,9 @@ export const CreateReservationBodySchema = z
     customer_id: UuidSchema.nullable(),
     court_id: UuidSchema.nullable(),
 
-    start_time: IsoDateTimeSchema,
+    date: ReqIsoDateSchema,
+
+    start_time: ReqIsoTimeSchema,
     duration: ReservationDurationSchema,
 
     total_amount: MoneySchema,
@@ -65,10 +69,11 @@ export const CreateReservationBodySchema = z
   })
   .refine(
     ({ start_time, duration }) => {
-      const start = new Date(start_time);
-      const end = new Date(start.getTime() + duration * 60 * 60 * 1000);
+      const [hours, minutes] = start_time.split(":").map(Number);
+      const startMinutes = hours * 60 + minutes;
+      const endMinutes = startMinutes + duration * 60;
 
-      return start.toDateString() === end.toDateString();
+      return endMinutes <= 24 * 60;
     },
     {
       message: "Reservation must end before midnight",

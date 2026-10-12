@@ -1,6 +1,8 @@
 import { z } from "zod";
 import {
+  IsoDateSchema,
   IsoDateTimeSchema,
+  IsoTimeSchema,
   MoneySchema,
   NotesSchema,
   OptionalEmailSchema,
@@ -37,8 +39,10 @@ export const ReservationEntitySchema = z.object({
   court_id: UuidSchema.nullable(),
   created_by: UuidSchema.nullable(),
 
-  start_time: IsoDateTimeSchema,
-  end_time: IsoDateTimeSchema,
+  date: IsoDateSchema,
+
+  start_time: IsoTimeSchema,
+  end_time: IsoTimeSchema,
 
   total_amount: MoneySchema,
   minimum_payment: MoneySchema,
