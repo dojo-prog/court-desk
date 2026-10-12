@@ -24,8 +24,8 @@ export const PaymentMethodSchema = z.enum(
 export const PaymentEntitySchema = z.object({
   id: UuidSchema,
 
-  reservation_id: UuidSchema,
-  recorded_by: UuidSchema,
+  reservation_id: UuidSchema.nullable(),
+  recorded_by: UuidSchema.nullable(),
 
   amount: MoneySchema,
   method: PaymentMethodSchema,
