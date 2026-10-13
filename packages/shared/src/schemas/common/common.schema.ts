@@ -93,6 +93,11 @@ export const NotesSchema = z
   .trim()
   .max(1000, { message: "Notes cannot exceed 1000 characters" });
 
+export const NonNegativeIntSchema = z.coerce
+  .number()
+  .int({ message: "Number must be a whole number" })
+  .nonnegative({ message: "Number must not be less than 0" });
+
 // =======================================
 // Query
 // =======================================

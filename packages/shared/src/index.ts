@@ -8,3 +8,4 @@ export * from "./schemas/customers";
 export * from "./schemas/courts";
 export * from "./schemas/reservations";
 export * from "./schemas/payments";
+export * from "./schemas/dashboard";
