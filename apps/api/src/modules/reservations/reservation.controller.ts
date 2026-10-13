@@ -48,7 +48,10 @@ export const checkAvailability: Controller = async (req, res, next) => {
 
 export const createReservation: Controller = async (req, res, next) => {
   try {
-    const reservation = await reservationService.createReservation(req.body);
+    const reservation = await reservationService.createReservation({
+      ...req.body,
+      createdBy: req.user!.id,
+    });
 
     res.status(201).json({ success: true, data: { reservation } });
   } catch (error) {
