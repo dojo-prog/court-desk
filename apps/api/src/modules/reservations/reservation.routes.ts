@@ -3,6 +3,7 @@ import { authorizeRoles, protectRoute } from "@/middlewares/auth.middleware";
 import { validate } from "@/middlewares/validation.middleware";
 import {
   CreateReservationBodySchema,
+  ReservationAvailabilityQuerySchema,
   ReservationIdParamsSchema,
   ReservationQuerySchema,
   UpdateReservationStatusBodySchema,
@@ -29,6 +30,12 @@ router
     validate({ body: CreateReservationBodySchema }),
     reservationController.createReservation,
   );
+
+router.get(
+  "/availability",
+  validate({ query: ReservationAvailabilityQuerySchema }),
+  reservationController.checkAvailability,
+);
 
 router
   .route("/:reservationId")

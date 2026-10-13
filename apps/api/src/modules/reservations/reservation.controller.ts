@@ -1,5 +1,8 @@
 import { Controller } from "@/types/handlers";
-import { ReservationQuerySchema } from "@courtdesk/shared";
+import {
+  ReservationAvailabilityQuerySchema,
+  ReservationQuerySchema,
+} from "@courtdesk/shared";
 
 import * as reservationService from "./reservation.service";
 
@@ -22,6 +25,22 @@ export const getReservationById: Controller = async (req, res, next) => {
     );
 
     res.status(200).json({ success: true, data: { reservation } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const checkAvailability: Controller = async (req, res, next) => {
+  try {
+    const reservation = await reservationService.checkAvailability(
+      ReservationAvailabilityQuerySchema.parse(req.query),
+    );
+
+    const data = reservation
+      ? { available: false, reservation }
+      : { available: true };
+
+    res.status(200).json({ success: true, data });
   } catch (error) {
     next(error);
   }

@@ -46,14 +46,21 @@ export const ReservationQuerySchema = z.object({
   sortBy: ReservationAllowableSortSchema.optional(),
 });
 
+export const ReservationAvailabilityQuerySchema = z.object({
+  courtId: UuidSchema,
+  date: ReqIsoDateSchema,
+  startTime: ReqIsoTimeSchema,
+  endTime: ReqIsoTimeSchema,
+});
+
 // =======================================
 // Body
 // =======================================
 
 export const CreateReservationBodySchema = z
   .object({
-    customerId: UuidSchema.nullable(),
-    courtId: UuidSchema.nullable(),
+    customerId: UuidSchema,
+    courtId: UuidSchema,
 
     date: ReqIsoDateSchema,
 
@@ -92,6 +99,10 @@ export const UpdateReservationStatusBodySchema = z.object({
 export type ReservationSorts = z.infer<typeof ReservationAllowableSortSchema>;
 
 export type ReservationQuery = z.infer<typeof ReservationQuerySchema>;
+
+export type ReservationAvailabilityQuery = z.infer<
+  typeof ReservationAvailabilityQuerySchema
+>;
 
 export type CreateReservationBody = z.infer<typeof CreateReservationBodySchema>;
 

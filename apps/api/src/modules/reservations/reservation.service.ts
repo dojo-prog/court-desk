@@ -4,6 +4,7 @@ import { calculateEndTime } from "@/utils/calculateEndTime";
 import { isValidStatusTransition } from "@/utils/isValidStatusTransition";
 import {
   CreateReservationBody,
+  ReservationAvailabilityQuery,
   ReservationEntity,
   ReservationQuery,
   ReservationWithRelations,
@@ -47,6 +48,12 @@ export const getReservationById = async (
   return reservation;
 };
 
+export const checkAvailability = async (
+  query: ReservationAvailabilityQuery,
+): Promise<ReservationWithRelations | undefined> => {
+  return await reservationRepository.checkAvailability(query);
+};
+
 export const createReservation = async (
   payload: CreateReservationBody & { createdBy: string },
 ): Promise<ReservationWithRelations> => {
@@ -54,6 +61,24 @@ export const createReservation = async (
     ...payload,
     endTime: calculateEndTime(payload.startTime, payload.duration),
   };
+
+  const { courtId, date, startTime, endTime } = finalPayload;
+
+  const conflictReservation = await reservationRepository.checkAvailability({
+    courtId,
+    date,
+    startTime,
+    endTime,
+  });
+
+  if (conflictReservation) {
+    const { customer } = conflictReservation;
+
+    throw new AppError(
+      409,
+      `This schedule is aleady booked (${customer?.first_name} ${customer?.last_name})`,
+    );
+  }
 
   return reservationRepository.add(finalPayload);
 };

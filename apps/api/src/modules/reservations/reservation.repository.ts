@@ -10,6 +10,7 @@ import {
   RESERVATION_WITH_RELATIONS_PROJECTION,
 } from "@/infrastructure/database/query/reservation.query";
 import {
+  ReservationAvailabilityQuery,
   ReservationEntity,
   ReservationQuery,
   ReservationWithRelations,
@@ -71,6 +72,28 @@ export const findById = async (
     WHERE id = $1
     `,
     [reservationId],
+  );
+
+  return rows[0];
+};
+
+export const checkAvailability = async (
+  query: ReservationAvailabilityQuery,
+): Promise<ReservationWithRelations> => {
+  const { courtId, date, startTime, endTime } = query;
+
+  const { rows } = await pool.query(
+    `
+    SELECT ${RESERVATION_WITH_RELATIONS_PROJECTION}
+    FROM reservations r
+    ${RESERVATION_JOINS}
+    WHERE r.court_id = $1
+      AND r.date = $2
+      AND r.start_time < $4
+      AND r.end_time > $3
+    LIMIT 1
+    `,
+    [courtId, date, startTime, endTime],
   );
 
   return rows[0];
