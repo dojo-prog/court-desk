@@ -52,24 +52,24 @@ export const ReservationQuerySchema = z.object({
 
 export const CreateReservationBodySchema = z
   .object({
-    customer_id: UuidSchema.nullable(),
-    court_id: UuidSchema.nullable(),
+    customerId: UuidSchema.nullable(),
+    courtId: UuidSchema.nullable(),
 
     date: ReqIsoDateSchema,
 
-    start_time: ReqIsoTimeSchema,
+    startTime: ReqIsoTimeSchema,
     duration: ReservationDurationSchema,
 
-    total_amount: MoneySchema,
-    minimum_payment: MoneySchema,
+    totalAmount: MoneySchema,
+    minimumPayment: MoneySchema,
 
     status: ReservationStatusSchema.default("pending"),
 
     notes: NotesSchema.optional(),
   })
   .refine(
-    ({ start_time, duration }) => {
-      const [hours, minutes] = start_time.split(":").map(Number);
+    ({ startTime, duration }) => {
+      const [hours, minutes] = startTime.split(":").map(Number);
       const startMinutes = hours * 60 + minutes;
       const endMinutes = startMinutes + duration * 60;
 
