@@ -30,7 +30,7 @@ export const PaymentQuerySchema = z.object({
 // =======================================
 
 export const CreatePaymentBodySchema = z.object({
-  reservation_id: UuidSchema,
+  reservationId: UuidSchema,
 
   amount: MoneySchema,
   method: PaymentMethodSchema,
