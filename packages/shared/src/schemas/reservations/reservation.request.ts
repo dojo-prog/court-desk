@@ -89,6 +89,8 @@ export const UpdateReservationStatusBodySchema = z.object({
 // Types
 // =======================================
 
+export type ReservationSorts = z.infer<typeof ReservationAllowableSortSchema>;
+
 export type ReservationQuery = z.infer<typeof ReservationQuerySchema>;
 
 export type CreateReservationBody = z.infer<typeof CreateReservationBodySchema>;
