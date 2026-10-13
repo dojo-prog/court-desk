@@ -69,3 +69,5 @@ export const PaymentWithRelationsSchema = PaymentEntitySchema.omit({
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 
 export type PaymentEntity = z.infer<typeof PaymentEntitySchema>;
+
+export type PaymentWithRelations = z.infer<typeof PaymentWithRelationsSchema>;
