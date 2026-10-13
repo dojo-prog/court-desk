@@ -38,7 +38,7 @@ export const buildCustomerFilterParts = ({
   // =======================================
 
   if (search && searchableColumns?.length) {
-    const placeholder = `$${values.length}`;
+    const placeholder = `$${values.length + 1}`;
 
     const searchConditions = searchableColumns
       .map((sc) => `${sc} ILIKE ${placeholder}`)
