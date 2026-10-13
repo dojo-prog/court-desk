@@ -1,6 +1,6 @@
 import { calculateTotalPages } from "@/utils/calculateTotalPages";
 import { AppError } from "@/utils/errors/AppError";
-import { calculateEndTime } from "@/utils/calculateEndTime";
+import { calculateEndTime } from "@courtdesk/shared";
 import { isValidStatusTransition } from "@/utils/isValidStatusTransition";
 import {
   CreateReservationBody,
