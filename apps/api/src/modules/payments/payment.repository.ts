@@ -91,3 +91,14 @@ export const add = async (
 
   return findWithRelationsById(paymentId);
 };
+
+export const countRevenue = async (): Promise<number> => {
+  const { rows } = await pool.query(
+    `
+    SELECT SUM(amount) AS revenue 
+    FROM payments 
+    `,
+  );
+
+  return rows[0].revenue;
+};

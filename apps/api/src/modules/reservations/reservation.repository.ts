@@ -155,3 +155,13 @@ export const remove = async (
 
   return rows[0];
 };
+
+export const count = async (): Promise<number> => {
+  const { rows } = await pool.query(
+    `
+    SELECT COUNT(*) FROM reservations 
+    `,
+  );
+
+  return rows[0].count;
+};

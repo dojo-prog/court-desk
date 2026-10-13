@@ -140,3 +140,13 @@ export const remove = async (customerId: string): Promise<CustomerEntity> => {
 
   return rows[0];
 };
+
+export const count = async (): Promise<number> => {
+  const { rows } = await pool.query(
+    `
+    SELECT COUNT(*) FROM customers
+    `,
+  );
+
+  return rows[0].count;
+};
