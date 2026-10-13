@@ -1,5 +1,13 @@
 import { GetResult } from "@/types/common.types";
-import { PaymentWithRelations } from "@courtdesk/shared";
+import { CreatePaymentBody, PaymentWithRelations } from "@courtdesk/shared";
+
+// =======================================
+// Repository Final Payload
+// =======================================
+
+export type CreatePaymentFinalPayload = CreatePaymentBody & {
+  recordedBy: string;
+};
 
 // =======================================
 // Result
