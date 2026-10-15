@@ -10,6 +10,7 @@ import CustomersPage from "./pages/CustomersPage";
 import UsersPage from "./pages/UsersPage";
 import NotFoundPage from "./components/feedback/NotFoundPage";
 import MainLayout from "./layouts/MainLayout";
+import CourtsPage from "./pages/CourtsPage";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route index path="/dashboard" element={<DashboardPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/reservations" element={<ReservationsPage />} />
+          <Route path="/courts" element={<CourtsPage />} />
           <Route path="/payments" element={<PaymentsPage />} />
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/users" element={<UsersPage />} />
