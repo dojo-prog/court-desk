@@ -1,0 +1,16 @@
+export type ApiResponce<T> = {
+  success: boolean;
+  message?: string;
+  data?: T;
+};
+
+export type PaginatedDate<K extends string, T> = {
+  [P in K]: T[];
+} & {
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+  };
+};
