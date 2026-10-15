@@ -4,7 +4,7 @@ export type ApiResponse<T> = {
   data?: T;
 };
 
-export type PaginatedDate<K extends string, T> = {
+export type PaginatedData<K extends string, T> = {
   [P in K]: T[];
 } & {
   pagination: {
