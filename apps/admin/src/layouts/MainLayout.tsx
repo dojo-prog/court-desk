@@ -16,7 +16,7 @@ const MainLayout = () => {
       <div className="flex min-w-0 flex-1 flex-col">
         <Navbar />
 
-        <main className="mx-auto w-full max-w-7xl">
+        <main className="mx-auto w-full max-w-7xl px-10 py-8">
           <Outlet />
         </main>
       </div>
