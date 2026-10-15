@@ -26,7 +26,7 @@ export const buildPaymentFilterParts = ({
 
   const clauses = {
     whereClause: "",
-    orderByClause: "ORDER BY created_at IS NULL, created_at DESC",
+    orderByClause: "ORDER BY p.created_at IS NULL, p.created_at DESC",
     limitClause: "",
     offsetClause: "",
   };

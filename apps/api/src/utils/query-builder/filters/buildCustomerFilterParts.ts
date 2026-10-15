@@ -26,7 +26,7 @@ export const buildCustomerFilterParts = ({
 
   const clauses = {
     whereClause: "",
-    orderByClause: "ORDER BY created_at IS NULL, created_at DESC",
+    orderByClause: "ORDER BY c.created_at IS NULL, c.created_at DESC",
     limitClause: "",
     offsetClause: "",
   };
