@@ -7,13 +7,11 @@ type Props = {
 };
 
 const ProtectedRoute = ({ allowedRoles }: Props) => {
-  const { data: userData, isPending } = useCurrentUser();
+  const { data: user, isPending } = useCurrentUser();
   const location = useLocation();
 
   // TODO add loader UI
   if (isPending) return null;
-
-  const user = userData?.user;
 
   if (!user) {
     return <Navigate to={"/auth"} replace state={{ from: location }} />;

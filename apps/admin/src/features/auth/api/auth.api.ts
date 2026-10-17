@@ -8,7 +8,7 @@ import type {
 export const fetchCurrentUser = async () => {
   const { data } = await api.get<FetchCurrrentUserResponse>("/v1/auth/me");
 
-  return data.data;
+  return data.data?.user;
 };
 
 export const login = async (body: LoginBody) => {
