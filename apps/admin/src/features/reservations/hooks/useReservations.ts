@@ -1,25 +1,11 @@
-import type { ReservationQuery } from "@courtdesk/shared";
-import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { fetchReservations } from "../api/reservation.api";
+import type { ReservationQuery } from "@courtdesk/shared";
 
 export const useReservations = (params: ReservationQuery) => {
-  return useInfiniteQuery({
+  return useQuery({
     queryKey: ["reservations", params],
-    queryFn: ({ pageParam }) =>
-      fetchReservations({ ...params, page: pageParam }),
-
-    initialPageParam: 1,
-
-    getNextPageParam: (lastPage) => {
-      if (!lastPage) return undefined;
-
-      const { page, total_pages } = lastPage.pagination;
-
-      if (page >= total_pages) return undefined;
-
-      return page + 1;
-    },
-
+    queryFn: () => fetchReservations(params),
     placeholderData: keepPreviousData,
   });
 };
