@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import type { ReservationWithRelations } from "@courtdesk/shared";
-import { useDashboardOverview } from "@/features/dashboard/hooks/useDashboardOverview";
 import { getStatusColor } from "@/utils/variants/status/getStatusColor";
 import { CalendarX2 } from "lucide-react";
 
@@ -18,31 +17,53 @@ import {
 import CalendarLoadingState from "./calendar/CalendarLoadingState";
 import CalendarErrorState from "./calendar/CalendarErrorState";
 import ReservationDetailsDialog from "@/features/reservations/components/ReservationDetailsDialog";
+import { useReservations } from "@/features/reservations/hooks/useReservations";
+
+function getLocalDateString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
 
 export default function CalendarPage() {
-  const { data, isPending, isError } = useDashboardOverview();
+  const [selectedDate, setSelectedDate] = useState(() =>
+    getLocalDateString(new Date()),
+  );
 
   const [selectedReservation, setSelectedReservation] =
     useState<ReservationWithRelations | null>(null);
 
-  const reservations = data?.reservations_today ?? [];
+  const {
+    data: reservationsData,
+    isPending,
+    isError,
+  } = useReservations({
+    page: 1,
+    limit: 100,
+    date: selectedDate,
+    sortBy: "startTimeAsc",
+  });
+
+  const reservations = reservationsData?.reservations ?? [];
 
   const events = useMemo<EventInput[]>(
     () =>
-      reservations.map((reservation) => ({
-        id: reservation.id,
-        title: reservation.customer
-          ? `${reservation.customer.first_name} ${reservation.customer.last_name}`
-          : "Customer unavailable",
-        start: `${reservation.date}T${reservation.start_time}`,
-        end: `${reservation.date}T${reservation.end_time}`,
-        backgroundColor: getStatusColor(reservation.status),
-        borderColor: getStatusColor(reservation.status),
-        textColor: "#ffffff",
-        extendedProps: {
-          reservation,
-        },
-      })),
+      reservations.map((reservation) => {
+        const color = getStatusColor(reservation.status);
+
+        return {
+          id: reservation.id,
+          title: reservation.customer
+            ? `${reservation.customer.first_name} ${reservation.customer.last_name}`
+            : "Customer unavailable",
+          start: `${reservation.date}T${reservation.start_time}`,
+          end: `${reservation.date}T${reservation.end_time}`,
+          color,
+          extendedProps: { reservation },
+        };
+      }),
     [reservations],
   );
 
@@ -58,7 +79,7 @@ export default function CalendarPage() {
 
   if (isPending) return <CalendarLoadingState />;
 
-  if (isError || !data) return <CalendarErrorState />;
+  if (isError || !reservationsData) return <CalendarErrorState />;
 
   return (
     <>
@@ -115,12 +136,15 @@ export default function CalendarPage() {
             ) : (
               <div className="calendar-page min-w-0">
                 <EventCalendar
-                  availableViews={[
-                    "timeGridDay",
-                    "timeGridWeek",
-                    "dayGridMonth",
-                  ]}
-                  initialDate={reservations[0]?.date}
+                  availableViews={["timeGridDay"]}
+                  initialDate={selectedDate}
+                  datesSet={(info) => {
+                    const nextDate = getLocalDateString(info.view.currentStart);
+
+                    setSelectedDate((currentDate) =>
+                      currentDate === nextDate ? currentDate : nextDate,
+                    );
+                  }}
                   events={events}
                   eventClick={handleEventClick}
                   eventDisplay="block"
@@ -132,31 +156,23 @@ export default function CalendarPage() {
                   slotDuration="00:30:00"
                   scrollTime="08:00:00"
                   expandRows
-                  dayMaxEvents
-                  weekends
                   displayEventTime
-                  eventTimeFormat={{
-                    hour: "numeric",
-                    minute: "2-digit",
-                    meridiem: "short",
-                  }}
                   eventContent={(info) => {
                     const reservation = info.event.extendedProps.reservation as
                       | ReservationWithRelations
                       | undefined;
 
                     return (
-                      <div className="min-w-0 overflow-hidden px-1.5 py-1 text-xs leading-relaxed text-foreground">
+                      <div className="min-w-0 overflow-hidden px-1.5 py-1 text-xs text-foreground">
                         <div className="truncate font-semibold">
                           {info.timeText}
                         </div>
-
                         <div className="truncate font-medium">
                           {info.event.title}
                         </div>
 
                         {info.view.type !== "dayGridMonth" && (
-                          <div className="truncate opacity-90">
+                          <div className="truncate">
                             {reservation?.court?.name ?? "Court unavailable"}
                           </div>
                         )}
