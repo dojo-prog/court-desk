@@ -17,8 +17,17 @@ import {
 import React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import type { UserRole } from "@courtdesk/shared";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
-const sidebarTabs = [
+type SideBarTab = {
+  label: string;
+  path: string;
+  Icon: React.ElementType;
+  allowedRoles?: UserRole[];
+};
+
+const sidebarTabs: SideBarTab[] = [
   {
     label: "Dashboard",
     path: "/",
@@ -53,6 +62,7 @@ const sidebarTabs = [
     label: "Users",
     path: "/users",
     Icon: CircleUser,
+    allowedRoles: ["admin"],
   },
 ];
 
@@ -63,7 +73,16 @@ type SidebarProps = {
 
 const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
   const { mutateAsync: logout } = useLogout();
+  const { data: user } = useCurrentUser();
+
   const navigate = useNavigate();
+
+  const visibleTabs = sidebarTabs.filter((t) => {
+    if (!t.allowedRoles) return true;
+    if (!user) return false;
+
+    t.allowedRoles?.includes(user.role);
+  });
 
   const handleLogout = async () => {
     await logout();
@@ -99,7 +118,7 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-3">
-        {sidebarTabs.map((tab) => (
+        {visibleTabs.map((tab) => (
           <NavItem
             key={tab.path}
             to={tab.path}
