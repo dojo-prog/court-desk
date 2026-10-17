@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const sidebarTabs = [
@@ -63,9 +63,12 @@ type SidebarProps = {
 
 const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
   const { mutateAsync: logout } = useLogout();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
+
+    navigate("/auth", { replace: true });
   };
 
   return (
