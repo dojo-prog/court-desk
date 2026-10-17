@@ -14,6 +14,7 @@ import NotFoundPage from "@/components/feedback/NotFoundPage";
 import MainLayout from "@/layouts/MainLayout";
 import CourtsPage from "@/pages/CourtsPage";
 import ForbiddenPage from "@/components/feedback/ForbiddenPage";
+import HomeRedirect from "./features/auth/components/HomeRedirect";
 
 const App = () => {
   return (
@@ -27,7 +28,9 @@ const App = () => {
         {/* AuthN routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<MainLayout />}>
-            <Route index element={<DashboardPage />} />
+            {/* Role-based home redirect */}
+            <Route index element={<HomeRedirect />} />
+
             <Route index path="/dashboard" element={<DashboardPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/reservations" element={<ReservationsPage />} />
