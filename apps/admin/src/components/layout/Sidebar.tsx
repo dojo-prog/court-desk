@@ -30,8 +30,9 @@ type SideBarTab = {
 const sidebarTabs: SideBarTab[] = [
   {
     label: "Dashboard",
-    path: "/",
+    path: "/dashboard",
     Icon: LayoutDashboard,
+    allowedRoles: ["admin"],
   },
   {
     label: "Calendar",
@@ -75,13 +76,15 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
   const { mutateAsync: logout } = useLogout();
   const { data: user } = useCurrentUser();
 
+  console.log(user?.role);
+
   const navigate = useNavigate();
 
   const visibleTabs = sidebarTabs.filter((t) => {
     if (!t.allowedRoles) return true;
     if (!user) return false;
 
-    t.allowedRoles?.includes(user.role);
+    return t.allowedRoles.includes(user.role);
   });
 
   const handleLogout = async () => {

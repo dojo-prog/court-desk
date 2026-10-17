@@ -31,7 +31,6 @@ const App = () => {
             {/* Role-based home redirect */}
             <Route index element={<HomeRedirect />} />
 
-            <Route index path="/dashboard" element={<DashboardPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/reservations" element={<ReservationsPage />} />
             <Route path="/courts" element={<CourtsPage />} />
@@ -40,6 +39,7 @@ const App = () => {
 
             {/* Admin only routes */}
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/users" element={<UsersPage />} />
             </Route>
           </Route>
