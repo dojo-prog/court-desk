@@ -50,14 +50,14 @@ const RegisterCourtForm = ({ setDialogOpen }: Props) => {
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       {/* Status */}
       <div className="space-y-2">
-        <Label htmlFor="user-role">Role</Label>
+        <Label htmlFor="court-status">Status</Label>
 
         <Controller
           name="status"
           control={form.control}
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger id="user-role">
+              <SelectTrigger id="court-status">
                 <SelectValue
                   placeholder="Select a role"
                   className={"capitalize"}
