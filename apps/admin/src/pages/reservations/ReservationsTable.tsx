@@ -14,14 +14,6 @@ import { getStatusClassName } from "@/utils/variants/status/getStatusClassName";
 import { getDurationInHours } from "@/utils/dates/getDurationInHours";
 
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Table,
   TableBody,
   TableCell,
@@ -30,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getPaymentStatusClassName } from "@/utils/variants/status/getPaymentStatusClassName";
+import TablePagination from "@/components/common/TablePagination";
 
 type Props = {
   data?: FetchReservationsData;
@@ -252,65 +245,11 @@ const ReservationsTable = ({
 
       {/* Pagination */}
       {!isPending && !isError && reservations.length > 0 && (
-        <div className="flex flex-col gap-3 border-t px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">
-            Page <span className="font-medium text-foreground">{page}</span> of{" "}
-            <span className="font-medium text-foreground">{totalPages}</span>
-          </p>
-
-          <Pagination className="mx-0 w-auto justify-start sm:justify-end">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(event) => {
-                    event.preventDefault();
-
-                    if (page > 1) {
-                      setFilters((prev) => ({ ...prev, page: page - 1 }));
-                    }
-                  }}
-                  aria-disabled={page <= 1}
-                  className={page <= 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (pageNumber) => (
-                  <PaginationItem key={pageNumber}>
-                    <PaginationLink
-                      href="#"
-                      isActive={pageNumber === page}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setFilters((prev) => ({ ...prev, page: pageNumber }));
-                      }}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
-                ),
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(event) => {
-                    event.preventDefault();
-
-                    if (page < totalPages) {
-                      setFilters((prev) => ({ ...prev, page: page + 1 }));
-                    }
-                  }}
-                  aria-disabled={page >= totalPages}
-                  className={
-                    page >= totalPages ? "pointer-events-none opacity-50" : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <TablePagination
+          page={page}
+          totalPages={totalPages}
+          setFilters={setFilters}
+        />
       )}
     </div>
   );
