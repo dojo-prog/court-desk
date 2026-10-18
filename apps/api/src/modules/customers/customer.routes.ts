@@ -45,7 +45,7 @@ router
     }),
     customerController.updateCustomer,
   )
-  .get(
+  .delete(
     deleteCustomerLimiter,
     validate({ params: CustomerIdParamsSchema }),
     customerController.deleteCustomer,
