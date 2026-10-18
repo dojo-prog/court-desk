@@ -112,6 +112,7 @@ export const update = async (
     WHERE id = $${values.length}
     RETURNING *
     `,
+    values,
   );
 
   const userPrivate: UserPrivateEntity = rows[0];
