@@ -134,7 +134,10 @@ export default function CalendarPage() {
                 </div>
               </div>
             ) : (
-              <div className="calendar-page min-w-0">
+              <div
+                className="h-[calc(100vh-19rem)] overflow-y-auto calendar-page min-w-0"
+                style={{ scrollbarWidth: "thin" }}
+              >
                 <EventCalendar
                   availableViews={["timeGridDay"]}
                   initialDate={selectedDate}
@@ -151,8 +154,8 @@ export default function CalendarPage() {
                   height="auto"
                   nowIndicator
                   allDaySlot={false}
-                  slotMinTime="06:00:00"
-                  slotMaxTime="23:00:00"
+                  slotMinTime="04:00:00"
+                  slotMaxTime="24:00:00"
                   slotDuration="00:30:00"
                   scrollTime="08:00:00"
                   expandRows
