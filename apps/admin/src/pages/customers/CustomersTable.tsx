@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
 import type { CustomerQuery } from "@courtdesk/shared";
 
@@ -13,12 +13,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PenIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import type { FetchCustomersData } from "@/features/customers/types/customer.types";
 import TablePagination from "@/components/common/TablePagination";
 import { formatDateTimeToDate } from "@/utils/dates/formatDateTimeToDate";
 import { getInitials } from "@/utils/getInitals";
 import SearchInput from "@/components/common/SearchInput";
+import UpdateCustomerButton from "@/features/customers/components/UpdateCustomerButton";
 
 type Props = {
   data?: FetchCustomersData;
@@ -191,9 +192,8 @@ const CustomersTable = ({
                     {/* Actions */}
                     <TableCell className="pr-10">
                       <div className="flex items-center justify-end space-x-2">
-                        <Button variant={"ghost"}>
-                          <PenIcon />
-                        </Button>
+                        <UpdateCustomerButton selectedCustomer={customer} />
+
                         <Button variant={"destructive"}>
                           <TrashIcon />
                         </Button>
