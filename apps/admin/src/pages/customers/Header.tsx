@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import RegisterCustomerButton from "@/features/customers/components/RegisterCustomerButton";
 
 const Header = () => {
   return (
@@ -13,10 +12,7 @@ const Header = () => {
       </div>
 
       <div>
-        <Button className={"text-white flex items-center"}>
-          <Plus />
-          <span>Register Customer</span>
-        </Button>
+        <RegisterCustomerButton />
       </div>
     </div>
   );
