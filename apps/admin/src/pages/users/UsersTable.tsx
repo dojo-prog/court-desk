@@ -173,14 +173,16 @@ const UsersTable = ({
 
                     {/* Actions */}
                     <TableCell className="pr-10">
-                      <div className="flex items-center justify-end space-x-2">
-                        <Button variant={"ghost"}>
-                          <PenIcon />
-                        </Button>
-                        <Button variant={"destructive"}>
-                          <TrashIcon />
-                        </Button>
-                      </div>
+                      {user.first_name.toLowerCase() != "super" && (
+                        <div className="flex items-center justify-end space-x-2">
+                          <Button variant={"ghost"}>
+                            <PenIcon />
+                          </Button>
+                          <Button variant={"destructive"}>
+                            <TrashIcon />
+                          </Button>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 );
