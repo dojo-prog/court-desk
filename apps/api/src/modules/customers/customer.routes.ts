@@ -19,14 +19,17 @@ const router = express.Router();
 
 router.use(protectRoute, authorizeRoles(["admin", "staff"]));
 
-(router
+router
   .route("/")
   .get(
     validate({ query: CustomerQuerySchema }),
     customerController.getCustomers,
   )
-  .post(createCustomerLimiter, validate({ body: CreateCustomerBodySchema })),
-  customerController.createCustomer);
+  .post(
+    createCustomerLimiter,
+    validate({ body: CreateCustomerBodySchema }),
+    customerController.createCustomer,
+  );
 
 router
   .route("/:customerId")
