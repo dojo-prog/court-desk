@@ -53,7 +53,7 @@ export const findByName = async (
     SELECT ${USER_PUBLIC_PROJECTION}
     FROM users
     WHERE LOWER(first_name) = LOWER($1)
-      AND LOWER(last_name) = LOWER($1)
+      AND LOWER(last_name) = LOWER($2)
     `,
     [firstName, lastName],
   );
