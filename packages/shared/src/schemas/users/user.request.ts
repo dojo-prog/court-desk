@@ -6,11 +6,16 @@ import {
   SearchQuerySchema,
   UuidSchema,
 } from "../common";
+import { UserRoleSchema } from "./user.schema";
 
 export const RegisterUserPasswordSchema = z
   .string()
   .min(6, "Password must at least be 6 characters long")
   .max(100, "Password cannot exceed 100 characters");
+
+export const ConfirmationPasswordScema = z
+  .string()
+  .min(1, { message: "Confirmation Password is Required" });
 
 // =======================================
 // Params
@@ -34,15 +39,16 @@ export const UserQuerySchema = z.object({
 
 export const RegisterUserBodySchema = z
   .object({
+    role: UserRoleSchema,
     firstName: ReqFirstNameSchema,
     lastName: ReqLastNameSchema,
     email: ReqEmailSchema,
     password: RegisterUserPasswordSchema,
-    confirmPassword: z.string(),
+    confirmPassword: ConfirmationPasswordScema,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords does not match",
-    path: ["password", "confirmPassword"],
+    path: ["confirmPassword"],
   });
 
 export const UpdateUserBodySchema = z.object({
