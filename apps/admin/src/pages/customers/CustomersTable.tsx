@@ -12,14 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { TrashIcon } from "lucide-react";
 import type { FetchCustomersData } from "@/features/customers/types/customer.types";
 import TablePagination from "@/components/common/TablePagination";
 import { formatDateTimeToDate } from "@/utils/dates/formatDateTimeToDate";
 import { getInitials } from "@/utils/getInitals";
 import SearchInput from "@/components/common/SearchInput";
 import UpdateCustomerButton from "@/features/customers/components/UpdateCustomerButton";
+import DeleteCustomerButton from "@/features/customers/components/DeleteCustomerButton";
 
 type Props = {
   data?: FetchCustomersData;
@@ -194,9 +193,7 @@ const CustomersTable = ({
                       <div className="flex items-center justify-end space-x-2">
                         <UpdateCustomerButton selectedCustomer={customer} />
 
-                        <Button variant={"destructive"}>
-                          <TrashIcon />
-                        </Button>
+                        <DeleteCustomerButton customer={customer} />
                       </div>
                     </TableCell>
                   </TableRow>
