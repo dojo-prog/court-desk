@@ -29,8 +29,8 @@ export const OptionalEmailSchema = z
   .toLowerCase()
   .max(200, { message: "Email cannot exceed 200 characters" })
   .email({ message: "Invalid email format" })
-  .optional();
-
+  .optional()
+  .or(z.literal(""));
 export const IsoDateTimeSchema = z.iso.datetime({
   offset: true,
   message: "Invalid iso datetime format",
@@ -77,7 +77,8 @@ export const OptionalPhPhoneSchema = z
     message:
       "Phone number must be a valid PH mobile number (e.g., 09171234567)",
   })
-  .optional();
+  .optional()
+  .or(z.literal(""));
 
 export const MoneySchema = z
   .number()
