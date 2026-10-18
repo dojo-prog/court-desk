@@ -52,6 +52,7 @@ export const RegisterUserBodySchema = z
   });
 
 export const UpdateUserBodySchema = z.object({
+  role: UserRoleSchema,
   firstName: ReqFirstNameSchema,
   lastName: ReqLastNameSchema,
 });
