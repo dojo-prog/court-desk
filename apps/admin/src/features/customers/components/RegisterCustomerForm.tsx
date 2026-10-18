@@ -109,7 +109,7 @@ const RegisterCustomerForm = ({ setDialogOpen }: Props) => {
         </Button>
 
         <Button type="submit" disabled={isPending} className="px-4 text-white">
-          <ButtonLoader isLoading={isPending}>Register User</ButtonLoader>
+          <ButtonLoader isLoading={isPending}>Register Customer</ButtonLoader>
         </Button>
       </DialogFooter>
     </form>
