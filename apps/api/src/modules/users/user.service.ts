@@ -50,7 +50,7 @@ export const registerUser = async (
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(password, salt);
 
-  const { confirmPassword, ...rest } = payload;
+  const { password: p, confirmPassword, ...rest } = payload;
 
   return userRepository.register({ ...rest, passwordHash });
 };
