@@ -134,6 +134,7 @@ export const remove = async (customerId: string): Promise<CustomerEntity> => {
     `
     DELETE FROM customers
     WHERE id = $1
+    RETURNING *
     `,
     [customerId],
   );
