@@ -14,8 +14,9 @@ import {
 import { getInitials } from "@/utils/getInitals";
 import { formatDateTimeToDate } from "@/utils/dates/formatDateTimeToDate";
 import { Button } from "@/components/ui/button";
-import { PenIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { getUserRoleClassName } from "@/utils/variants/status/getUserRoleClassName";
+import UpdateUserButton from "@/features/users/components/UpdateUserButton";
 
 type Props = {
   users: UserPublicEntity[];
@@ -175,9 +176,7 @@ const UsersTable = ({
                     <TableCell className="pr-10">
                       {user.first_name.toLowerCase() != "super" && (
                         <div className="flex items-center justify-end space-x-2">
-                          <Button variant={"ghost"}>
-                            <PenIcon />
-                          </Button>
+                          <UpdateUserButton user={user} />
                           <Button variant={"destructive"}>
                             <TrashIcon />
                           </Button>
