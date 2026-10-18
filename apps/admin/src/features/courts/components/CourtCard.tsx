@@ -1,10 +1,9 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getCourtStatusClassName } from "@/utils/variants/status/getCourtStatusClassName";
 import type { CourtEntity } from "@courtdesk/shared";
-import { TrashIcon } from "lucide-react";
 import UpdateCourtButton from "./UpdateCourtButton";
+import DeleteCourtButton from "./DeleteCourtButton";
 
 type Props = {
   court: CourtEntity;
@@ -50,9 +49,7 @@ const CourtCard = ({ court }: Props) => {
       {/* Actions */}
       <div className="hidden group-hover:flex absolute top-4 right-4  items-center space-x-2">
         <UpdateCourtButton court={court} />
-        <Button variant={"destructive"}>
-          <TrashIcon />
-        </Button>
+        <DeleteCourtButton court={court} />
       </div>
     </Card>
   );
