@@ -81,6 +81,7 @@ export const remove = async (courtId: string): Promise<CourtEntity> => {
     `
     DELETE FROM courts
     WHERE id = $1
+    RETURNING *
     `,
     [courtId],
   );
