@@ -1,6 +1,7 @@
 export const PAYMENT_WITH_RELATIONS_PROJECTION = `
   p.id,
   p.amount,
+  p.method,
   p.paid_at,
   p.created_at,
 
