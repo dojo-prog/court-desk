@@ -43,5 +43,11 @@ export const createPayment = async (payload: CreatePaymentFinalPayload) => {
     throw new AppError(404, "Reservation not found");
   }
 
-  return paymentRepository.add(payload);
+  const payment = await paymentRepository.add(payload);
+
+  if (reservation.status === "pending") {
+    reservationRepository.update(reservation, { status: "confirmed" });
+  }
+
+  return payment;
 };
