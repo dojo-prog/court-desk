@@ -1,8 +1,9 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import type { FetchReservationsData } from "@/features/reservations/types/reservation.types";
-import type {
-  ReservationQuery,
-  ReservationWithRelations,
+import {
+  ReservationStatusSchema,
+  type ReservationQuery,
+  type ReservationWithRelations,
 } from "@courtdesk/shared";
 
 import { Badge } from "@/components/ui/badge";
@@ -21,11 +22,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getPaymentStatusClassName } from "@/utils/variants/status/getPaymentStatusClassName";
 import TablePagination from "@/components/common/TablePagination";
 import ReservationDetailsDialog from "@/features/reservations/components/ReservationDetailsDialog";
 import { getPaymentStatus } from "@/utils/getPaymentStatus";
 import { getTotalPaid } from "@/utils/getTotalPaid";
+import SearchInput from "@/components/common/SearchInput";
 
 type Props = {
   data?: FetchReservationsData;
@@ -53,22 +62,105 @@ const ReservationsTable = ({
   const totalPages = data?.pagination.total_pages ?? 1;
   const totalReservations = data?.pagination.total ?? reservations.length;
 
+  const statuses = ReservationStatusSchema.options;
+
+  const hasActiveFilters = Boolean(
+    filters.search || filters.status || filters.date,
+  );
+
   return (
     <>
       <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
-        {/* Table heading */}
-        <div className="flex flex-col gap-3 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="font-semibold tracking-tight">All reservations</h2>
+        {/* Table heading & Filters */}
+        <div className="border-b px-5 py-4 space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-semibold tracking-tight">All reservations</h2>
 
-            <p className="mt-1 text-sm text-muted-foreground">
-              View and manage court bookings.
-            </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                View and manage court bookings.
+              </p>
+            </div>
+
+            <Badge variant="secondary" className="w-fit rounded-full px-3 py-1">
+              {totalReservations} reservations
+            </Badge>
           </div>
 
-          <Badge variant="secondary" className="w-fit rounded-full px-3 py-1">
-            {totalReservations} reservations
-          </Badge>
+          {/* Filters Bar */}
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <SearchInput
+              value={filters.search ?? ""}
+              onChange={(value) =>
+                setFilters((prev) => ({ ...prev, search: value, page: 1 }))
+              }
+              className="max-w-100 lg:flex-1"
+              placeholder="Search customer name or email..."
+            />
+
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Status Filter */}
+              <Select
+                value={filters.status ?? "all"}
+                onValueChange={(value) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    status: value === "all" ? undefined : (value as any),
+                    page: 1,
+                  }))
+                }
+              >
+                <SelectTrigger className="w-full sm:w-40 capitalize">
+                  <SelectValue placeholder="All statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All statuses</SelectItem>
+                  {statuses.map((status) => (
+                    <SelectItem
+                      key={status}
+                      value={status}
+                      className="capitalize"
+                    >
+                      {status}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Date Filter */}
+              <input
+                type="date"
+                value={filters.date ?? ""}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    date: e.target.value ? e.target.value : undefined,
+                    page: 1,
+                  }))
+                }
+                className="h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              />
+
+              {/* Reset Filters */}
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      search: "",
+                      status: undefined,
+                      date: undefined,
+                      page: 1,
+                    }))
+                  }
+                  className="text-xs font-medium text-muted-foreground hover:text-foreground underline underline-offset-4 px-1"
+                >
+                  Reset filters
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Table content */}
@@ -93,9 +185,9 @@ const ReservationsTable = ({
 
             <TableBody>
               {/* Loading state */}
-              {false && (
+              {isPending && (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-32 text-center">
+                  <TableCell colSpan={7} className="h-32 text-center">
                     <span className="text-sm text-muted-foreground">
                       Loading reservations...
                     </span>
@@ -106,7 +198,7 @@ const ReservationsTable = ({
               {/* Error state */}
               {!isPending && isError && (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-32 text-center">
+                  <TableCell colSpan={7} className="h-32 text-center">
                     <p className="font-medium">Unable to load reservations</p>
 
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -119,11 +211,13 @@ const ReservationsTable = ({
               {/* Empty state */}
               {!isPending && !isError && reservations.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-36 text-center">
-                    <p className="font-medium">No reservations yet</p>
+                  <TableCell colSpan={7} className="h-36 text-center">
+                    <p className="font-medium">No reservations found</p>
 
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Reservations will appear here when they are created.
+                      {hasActiveFilters
+                        ? "Try adjusting your search or filters."
+                        : "Reservations will appear here when they are created."}
                     </p>
                   </TableCell>
                 </TableRow>

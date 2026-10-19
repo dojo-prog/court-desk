@@ -5,6 +5,7 @@ import type { ReservationQuery } from "@courtdesk/shared";
 
 import Header from "./reservations/Header";
 import ReservationsTable from "./reservations/ReservationsTable";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const ReservationsPage = () => {
   const [filters, setFilters] = useState<ReservationQuery>({
@@ -14,7 +15,12 @@ const ReservationsPage = () => {
     search: "",
   });
 
-  const { data, isPending, isError } = useReservations(filters);
+  const debouncedSearch = useDebounce(filters.search);
+
+  const { data, isPending, isError } = useReservations({
+    ...filters,
+    search: debouncedSearch,
+  });
 
   return (
     <div className="space-y-6">
