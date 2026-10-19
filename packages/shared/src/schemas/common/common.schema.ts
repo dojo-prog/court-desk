@@ -40,7 +40,7 @@ export const IsoDateSchema = z.iso.date({
   message: "Invalid iso date format",
 });
 
-export const IsoTimeSchema = z.iso.date({
+export const IsoTimeSchema = z.iso.time({
   message: "Invalid iso time format",
 });
 
@@ -58,7 +58,7 @@ export const ReqIsoDateSchema = z.iso
   .min(1, { message: "Date is required" });
 
 export const ReqIsoTimeSchema = z.iso
-  .date({
+  .time({
     message: "Invalid iso time format",
   })
   .min(1, { message: "Time is required" });
@@ -86,6 +86,23 @@ export const MoneySchema = z
   .nonnegative("Amount cannot be negative")
   .refine(
     (value) => Number.isInteger(value * 100),
+    "Amount can have at most 2 decimal places",
+  );
+
+export const MoneyInputSchema = z
+  .number({
+    error: (issue) => {
+      if (issue.input === undefined || issue.input === null) {
+        return "Amount is required";
+      }
+      return "Amount must be a valid number";
+    },
+  })
+  .finite("Amount must be a finite number")
+  .nonnegative("Amount cannot be negative")
+  .refine((val) => !Number.isNaN(val), "Amount cannot be NaN")
+  .refine(
+    (value) => Number.isInteger(Math.round(value * 100)),
     "Amount can have at most 2 decimal places",
   );
 
