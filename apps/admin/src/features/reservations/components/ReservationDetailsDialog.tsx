@@ -19,6 +19,7 @@ import { getStatusVariant } from "@/utils/variants/status/getStatusVariant";
 import type { ReservationWithRelations } from "@courtdesk/shared";
 import { Clock3, MapPin, UserRound } from "lucide-react";
 import { useState } from "react";
+import CancelReservationButton from "./CancelReservationButton";
 
 type ReservationDetailsDialogProps = {
   selectedReservation: ReservationWithRelations | null;
@@ -42,6 +43,10 @@ const ReservationDetailsDialog = ({
   const remainingBalance = reservation
     ? reservation?.total_amount - totalPaid
     : 0;
+
+  const reservationStatus = reservation.status;
+
+  const isCancelled = reservation.status === "cancelled";
 
   return (
     <Dialog open={reservation !== null} onOpenChange={onOpenChange}>
@@ -69,11 +74,13 @@ const ReservationDetailsDialog = ({
                   </Badge>
 
                   {/* Payment Status */}
-                  <Badge
-                    className={`${getPaymentStatusClassName(paymentStatus)}`}
-                  >
-                    {capitalize(paymentStatus)}
-                  </Badge>
+                  {!isCancelled && (
+                    <Badge
+                      className={`${getPaymentStatusClassName(paymentStatus)}`}
+                    >
+                      {capitalize(paymentStatus)}
+                    </Badge>
+                  )}
                 </div>
 
                 <span className="text-sm text-muted-foreground">
@@ -182,23 +189,35 @@ const ReservationDetailsDialog = ({
                 />
               )}
 
-              <div className="flex space-x-4">
-                <Button
-                  variant="outline"
-                  className={"flex-1"}
-                  onClick={() => onOpenChange(false)}
-                >
-                  Close
-                </Button>
-
-                {remainingBalance > 0 && !addingPayment && (
+              {/* Action Buttons */}
+              <div className="space-y-2">
+                <div className="flex space-x-4">
                   <Button
-                    className={"flex-1 text-foreground"}
-                    onClick={() => setAddingPayment(true)}
+                    variant="outline"
+                    className={"flex-1"}
+                    onClick={() => onOpenChange(false)}
                   >
-                    {totalPaid === 0 ? "Add Initial Payment" : "Add Payment"}
+                    Close
                   </Button>
-                )}
+
+                  {remainingBalance > 0 && !addingPayment && !isCancelled && (
+                    <Button
+                      className={"flex-1 text-foreground"}
+                      onClick={() => setAddingPayment(true)}
+                    >
+                      {totalPaid === 0 ? "Add Initial Payment" : "Add Payment"}
+                    </Button>
+                  )}
+                </div>
+                {/* Cancel Button */}
+                {reservationStatus !== "cancelled" &&
+                  reservationStatus !== "completed" &&
+                  !addingPayment && (
+                    <CancelReservationButton
+                      reservation={reservation}
+                      onSuccess={() => onOpenChange(false)}
+                    />
+                  )}
               </div>
             </div>
           </>
