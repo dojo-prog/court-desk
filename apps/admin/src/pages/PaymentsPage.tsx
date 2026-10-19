@@ -4,6 +4,7 @@ import type { PaymentQuery } from "@courtdesk/shared";
 import { usePayments } from "@/features/payments/hooks/usePayments";
 import Header from "./payments/Header";
 import PaymentsTable from "./payments/PaymentsTable";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const PaymentsPage = () => {
   const [filters, setFilters] = useState<PaymentQuery>({
@@ -12,7 +13,12 @@ const PaymentsPage = () => {
     search: "",
   });
 
-  const { data, isPending, isError } = usePayments(filters);
+  const debouncedSearch = useDebounce(filters.search);
+
+  const { data, isPending, isError } = usePayments({
+    ...filters,
+    search: debouncedSearch,
+  });
 
   return (
     <div className="space-y-6">

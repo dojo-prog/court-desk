@@ -15,6 +15,7 @@ import TablePagination from "@/components/common/TablePagination";
 import { currencyFormatter } from "@/utils/money/currencyFormatter";
 import { formatDateTime } from "@/utils/dates/formatDateTime";
 import { formatPaymentMethod } from "@/utils/money/formatPaymentMethod";
+import SearchInput from "@/components/common/SearchInput";
 
 type PaymentsResponse = {
   payments: PaymentWithRelations[];
@@ -48,18 +49,30 @@ const PaymentsTable = ({
   return (
     <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
       {/* Table header */}
-      <div className="flex flex-col gap-3 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="font-semibold tracking-tight">All payments</h2>
+      <div className="border-b px-5 py-4 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="font-semibold tracking-tight">All payments</h2>
 
-          <p className="mt-1 text-sm text-muted-foreground">
-            View payment records and their associated reservations.
-          </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              View payment records and their associated reservations.
+            </p>
+          </div>
+
+          <Badge variant="secondary" className="w-fit rounded-full px-3 py-1">
+            {totalPayments} {totalPayments === 1 ? "payment" : "payments"}
+          </Badge>
         </div>
 
-        <Badge variant="secondary" className="w-fit rounded-full px-3 py-1">
-          {totalPayments} {totalPayments === 1 ? "payment" : "payments"}
-        </Badge>
+        {/* Filters bar */}
+        <SearchInput
+          value={filters.search ?? ""}
+          onChange={(value) =>
+            setFilters((prev) => ({ ...prev, search: value, page: 1 }))
+          }
+          className="max-w-100 lg:flex-1"
+          placeholder="Search customer name or email..."
+        />
       </div>
 
       {/* Table content */}
