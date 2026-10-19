@@ -57,8 +57,10 @@ export const checkAvailability = async (
 export const createReservation = async (
   payload: CreateReservationBody & { createdBy: string },
 ): Promise<ReservationWithRelations> => {
+  const { duration, ...rest } = payload;
+
   const finalPayload: CreateReservationFinalPayload = {
-    ...payload,
+    ...rest,
     endTime: calculateEndTime(payload.startTime, payload.duration),
   };
 
