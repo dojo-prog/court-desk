@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-1 flex items-center justify-between">
       <div>
@@ -13,7 +16,10 @@ const Header = () => {
       </div>
 
       <div>
-        <Button className={"text-white flex items-center"}>
+        <Button
+          className={"text-white flex items-center"}
+          onClick={() => navigate("/reservations/schedule")}
+        >
           <Plus />
           <span>Schedule Reservation</span>
         </Button>

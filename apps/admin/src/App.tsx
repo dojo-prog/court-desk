@@ -15,6 +15,7 @@ import MainLayout from "@/layouts/MainLayout";
 import CourtsPage from "@/pages/CourtsPage";
 import ForbiddenPage from "@/components/feedback/ForbiddenPage";
 import HomeRedirect from "./features/auth/components/HomeRedirect";
+import ScheduleReservationPage from "./pages/ScheduleReservationPage";
 
 const App = () => {
   return (
@@ -32,10 +33,15 @@ const App = () => {
             <Route index element={<HomeRedirect />} />
 
             <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/reservations" element={<ReservationsPage />} />
             <Route path="/courts" element={<CourtsPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/customers" element={<CustomersPage />} />
+
+            <Route path="/reservations" element={<ReservationsPage />} />
+            <Route
+              path="/reservations/schedule"
+              element={<ScheduleReservationPage />}
+            />
 
             {/* Admin only routes */}
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
