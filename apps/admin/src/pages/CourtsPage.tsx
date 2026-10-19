@@ -28,7 +28,7 @@ const CourtsPage = () => {
         value={filters.search ?? ""}
         onChange={(value) => setFilters((prev) => ({ ...prev, search: value }))}
         placeholder="Search court name..."
-        className="max-w-130"
+        wrapperClassName="max-w-130"
       />
 
       <CourtList courts={courts} isPending={isPending} isError={isError} />

@@ -88,13 +88,13 @@ const ReservationsTable = ({
           </div>
 
           {/* Filters Bar */}
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center ">
             <SearchInput
               value={filters.search ?? ""}
               onChange={(value) =>
                 setFilters((prev) => ({ ...prev, search: value, page: 1 }))
               }
-              className="max-w-100 lg:flex-1"
+              wrapperClassName="max-w-100"
               placeholder="Search customer name or email..."
             />
 

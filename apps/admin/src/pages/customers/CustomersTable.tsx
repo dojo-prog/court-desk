@@ -64,7 +64,7 @@ const CustomersTable = ({
           onChange={(value) =>
             setFilters((prev) => ({ ...prev, search: value }))
           }
-          className="max-w-100"
+          wrapperClassName="max-w-100"
           placeholder="Search customer name or email..."
         />
       </div>

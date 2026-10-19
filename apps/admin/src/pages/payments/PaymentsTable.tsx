@@ -70,7 +70,7 @@ const PaymentsTable = ({
           onChange={(value) =>
             setFilters((prev) => ({ ...prev, search: value, page: 1 }))
           }
-          className="max-w-100 lg:flex-1"
+          wrapperClassName="max-w-100"
           placeholder="Search customer name or email..."
         />
       </div>
