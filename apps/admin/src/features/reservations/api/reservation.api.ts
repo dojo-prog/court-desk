@@ -1,7 +1,9 @@
 import { api } from "@/lib/axios/client";
 import type {
   CreateReservationBody,
+  ReservationAvailabilityQuery,
   ReservationQuery,
+  ReservationWithRelations,
   UpdateReservationStatusBody,
 } from "@courtdesk/shared";
 import type {
@@ -10,6 +12,7 @@ import type {
   FetchReservationsRes,
   UpdateReservationStatusRes,
 } from "../types/reservation.types";
+import type { ApiResponse } from "@/types/api.types";
 
 // =======================================
 // Queries
@@ -27,6 +30,16 @@ export const fetchReservation = async (reservationId: string) => {
   const { data } = await api.get<FetchReservationRes>(
     `/v1/reservations/${reservationId}`,
   );
+
+  return data.data;
+};
+
+export const checkAvailability = async (
+  params: ReservationAvailabilityQuery,
+) => {
+  const { data } = await api.get<
+    ApiResponse<{ available: boolean; reservation: ReservationWithRelations }>
+  >("/v1/reservations/availability", { params });
 
   return data.data;
 };
