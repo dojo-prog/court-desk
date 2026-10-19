@@ -19,7 +19,7 @@ export const find = async (
   const { whereClause, orderByClause, offsetClause, limitClause, values } =
     buildPaymentFilterParts({
       query,
-      searchableColumns: ["r.id", "c.first_name", "c.last_name"],
+      searchableColumns: ["c.first_name", "c.last_name"],
     });
 
   const { rows } = await pool.query(
