@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import AddPaymentForm from "@/features/payments/components/AddPaymentForm";
 import { capitalize } from "@/utils/capitalize";
 import { formatDate } from "@/utils/dates/formatDate";
 import { formatTime } from "@/utils/dates/formatTime";
@@ -14,6 +15,7 @@ import { currencyFormatter } from "@/utils/money/currencyFormatter";
 import { getStatusVariant } from "@/utils/variants/status/getStatusVariant";
 import type { ReservationWithRelations } from "@courtdesk/shared";
 import { Clock3, MapPin, UserRound } from "lucide-react";
+import { useState } from "react";
 
 type ReservationDetailsDialogProps = {
   selectedReservation: ReservationWithRelations | null;
@@ -24,6 +26,8 @@ const ReservationDetailsDialog = ({
   selectedReservation,
   onOpenChange,
 }: ReservationDetailsDialogProps) => {
+  const [addingPayment, setAddingPayment] = useState<boolean>(false);
+
   const reservation = selectedReservation;
 
   const totalPaid =
@@ -32,9 +36,13 @@ const ReservationDetailsDialog = ({
       0,
     ) ?? 0;
 
+  const remainingBalance = reservation
+    ? reservation?.total_amount - totalPaid
+    : 0;
+
   return (
     <Dialog open={reservation !== null} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent className="flex flex-col max-h-[85vh] overflow-hidden sm:max-w-lg">
         {reservation && (
           <>
             <DialogHeader>
@@ -44,9 +52,15 @@ const ReservationDetailsDialog = ({
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-5">
+            <div
+              className="space-y-5 overflow-y-auto"
+              style={{ scrollbarWidth: "none" }}
+            >
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <Badge variant={getStatusVariant(reservation.status)}>
+                <Badge
+                  variant={getStatusVariant(reservation.status)}
+                  className="text-foreground"
+                >
                   {capitalize(reservation.status)}
                 </Badge>
 
@@ -135,9 +149,7 @@ const ReservationDetailsDialog = ({
                     Remaining balance
                   </span>
                   <span className="font-semibold">
-                    {currencyFormatter.format(
-                      reservation.total_amount - totalPaid,
-                    )}
+                    {currencyFormatter.format(remainingBalance)}
                   </span>
                 </div>
               </div>
@@ -151,13 +163,31 @@ const ReservationDetailsDialog = ({
                 </div>
               )}
 
-              <Button
-                className="w-full"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-              >
-                Close
-              </Button>
+              {addingPayment && (
+                <AddPaymentForm
+                  reservation={reservation}
+                  setOpen={setAddingPayment}
+                />
+              )}
+
+              <div className="flex space-x-4">
+                <Button
+                  variant="outline"
+                  className={"flex-1"}
+                  onClick={() => onOpenChange(false)}
+                >
+                  Close
+                </Button>
+
+                {remainingBalance > 0 && !addingPayment && (
+                  <Button
+                    className={"flex-1 text-foreground"}
+                    onClick={() => setAddingPayment(true)}
+                  >
+                    Add Payment
+                  </Button>
+                )}
+              </div>
             </div>
           </>
         )}
