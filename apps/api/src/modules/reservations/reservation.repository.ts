@@ -22,7 +22,7 @@ export const find = async (
   const { whereClause, orderByClause, limitClause, offsetClause, values } =
     buildReservationFilterParts({
       query,
-      searchableColumns: ["r.id", "c.first_name", "c.last_name", "c.email"],
+      searchableColumns: ["c.first_name", "c.last_name", "c.email"],
     });
 
   const { rows } = await pool.query(
