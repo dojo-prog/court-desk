@@ -51,6 +51,7 @@ export const findWithRelationsById = async (
     `
     SELECT ${PAYMENT_WITH_RELATIONS_PROJECTION}
     FROM payments p
+    ${PAYMENT_JOINS}
     WHERE p.id = $1
     `,
     [paymentId],
