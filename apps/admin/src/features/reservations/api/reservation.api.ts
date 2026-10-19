@@ -57,7 +57,7 @@ export const updateReservationStatus = async (
   body: UpdateReservationStatusBody,
 ) => {
   const { data } = await api.patch<UpdateReservationStatusRes>(
-    `/v1/reservations/${reservationId}`,
+    `/v1/reservations/${reservationId}/status`,
     body,
   );
 
