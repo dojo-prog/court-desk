@@ -24,6 +24,8 @@ import {
 import { getPaymentStatusClassName } from "@/utils/variants/status/getPaymentStatusClassName";
 import TablePagination from "@/components/common/TablePagination";
 import ReservationDetailsDialog from "@/features/reservations/components/ReservationDetailsDialog";
+import { getPaymentStatus } from "@/utils/getPaymentStatus";
+import { getTotalPaid } from "@/utils/getTotalPaid";
 
 type Props = {
   data?: FetchReservationsData;
@@ -146,18 +148,10 @@ const ReservationsTable = ({
                     reservation.end_time,
                   );
 
-                  const totalPaid =
-                    reservation?.payments.reduce(
-                      (total, payment) => total + payment.amount,
-                      0,
-                    ) ?? 0;
-
-                  const paymentStatus: "pending" | "partial" | "fully paid" =
-                    totalPaid === 0
-                      ? "pending"
-                      : totalPaid < reservation.total_amount
-                        ? "partial"
-                        : "fully paid";
+                  const paymentStatus = getPaymentStatus(
+                    reservation.total_amount,
+                    getTotalPaid(reservation),
+                  );
 
                   return (
                     <TableRow

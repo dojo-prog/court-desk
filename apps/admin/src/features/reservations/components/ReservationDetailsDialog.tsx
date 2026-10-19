@@ -11,7 +11,10 @@ import AddPaymentForm from "@/features/payments/components/AddPaymentForm";
 import { capitalize } from "@/utils/capitalize";
 import { formatDate } from "@/utils/dates/formatDate";
 import { formatTime } from "@/utils/dates/formatTime";
+import { getPaymentStatus } from "@/utils/getPaymentStatus";
+import { getTotalPaid } from "@/utils/getTotalPaid";
 import { currencyFormatter } from "@/utils/money/currencyFormatter";
+import { getPaymentStatusClassName } from "@/utils/variants/status/getPaymentStatusClassName";
 import { getStatusVariant } from "@/utils/variants/status/getStatusVariant";
 import type { ReservationWithRelations } from "@courtdesk/shared";
 import { Clock3, MapPin, UserRound } from "lucide-react";
@@ -30,11 +33,11 @@ const ReservationDetailsDialog = ({
 
   const reservation = selectedReservation;
 
-  const totalPaid =
-    reservation?.payments.reduce(
-      (total, payment) => total + payment.amount,
-      0,
-    ) ?? 0;
+  if (!reservation) return null;
+
+  const totalPaid = getTotalPaid(reservation);
+
+  const paymentStatus = getPaymentStatus(reservation.total_amount, totalPaid);
 
   const remainingBalance = reservation
     ? reservation?.total_amount - totalPaid
@@ -57,12 +60,21 @@ const ReservationDetailsDialog = ({
               style={{ scrollbarWidth: "none" }}
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <Badge
-                  variant={getStatusVariant(reservation.status)}
-                  className="text-foreground"
-                >
-                  {capitalize(reservation.status)}
-                </Badge>
+                <div className="flex items-center space-x-2">
+                  <Badge
+                    variant={getStatusVariant(reservation.status)}
+                    className="text-foreground"
+                  >
+                    {capitalize(reservation.status)}
+                  </Badge>
+
+                  {/* Payment Status */}
+                  <Badge
+                    className={`${getPaymentStatusClassName(paymentStatus)}`}
+                  >
+                    {capitalize(paymentStatus)}
+                  </Badge>
+                </div>
 
                 <span className="text-sm text-muted-foreground">
                   {formatDate(reservation.date)}

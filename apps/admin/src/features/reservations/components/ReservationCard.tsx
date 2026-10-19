@@ -7,6 +7,9 @@ import type { ReservationWithRelations } from "@courtdesk/shared";
 import { ChevronRight, Clock3, MapPin } from "lucide-react";
 import { useState } from "react";
 import ReservationDetailsDialog from "./ReservationDetailsDialog";
+import { getPaymentStatusClassName } from "@/utils/variants/status/getPaymentStatusClassName";
+import { getTotalPaid } from "@/utils/getTotalPaid";
+import { getPaymentStatus } from "@/utils/getPaymentStatus";
 
 type Props = {
   reservation: ReservationWithRelations;
@@ -19,10 +22,9 @@ const ReservationCard = ({ reservation }: Props) => {
     ? `${reservation.customer.first_name} ${reservation.customer.last_name}`
     : "Customer unavailable";
 
-  const paidAmount = reservation.payments.reduce(
-    (total, payment) => total + payment.amount,
-    0,
-  );
+  const paidAmount = getTotalPaid(reservation);
+
+  const paymentStatus = getPaymentStatus(reservation.total_amount, paidAmount);
 
   return (
     <>
@@ -42,11 +44,17 @@ const ReservationCard = ({ reservation }: Props) => {
           <div className="flex flex-wrap items-center gap-2">
             <p className="truncate font-medium">{customerName}</p>
 
+            {/* Reservation Status */}
             <Badge
               variant={getStatusVariant(reservation.status)}
               className="text-foreground"
             >
               {capitalize(reservation.status)}
+            </Badge>
+
+            {/* Payment Status */}
+            <Badge className={`${getPaymentStatusClassName(paymentStatus)}`}>
+              {capitalize(paymentStatus)}
             </Badge>
           </div>
 
