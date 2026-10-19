@@ -1,8 +1,7 @@
 import { z } from "zod";
 import {
   IsoDateSchema,
-  IsoDateTimeSchema,
-  MoneySchema,
+  MoneyInputSchema,
   NotesSchema,
   PaginationQuerySchema,
   ReqIsoDateSchema,
@@ -11,6 +10,16 @@ import {
   UuidSchema,
 } from "../common";
 import { ReservationStatusSchema } from "./reservation.schema";
+
+export const ReservationCustomerIdSchema = z
+  .string()
+  .min(1, { message: "Please specify the customer / booker" })
+  .uuid({ message: "Invalid UUID format" });
+
+export const ReservationCourtIdSchema = z
+  .string()
+  .min(1, { message: "Please specify the court to be booked" })
+  .uuid({ message: "Invalid UUID format" });
 
 export const ReservationDurationSchema = z
   .number()
@@ -59,16 +68,16 @@ export const ReservationAvailabilityQuerySchema = z.object({
 
 export const CreateReservationBodySchema = z
   .object({
-    customerId: UuidSchema,
-    courtId: UuidSchema,
+    customerId: ReservationCustomerIdSchema,
+    courtId: ReservationCourtIdSchema,
 
     date: ReqIsoDateSchema,
 
     startTime: ReqIsoTimeSchema,
     duration: ReservationDurationSchema,
 
-    totalAmount: MoneySchema,
-    minimumPayment: MoneySchema,
+    totalAmount: MoneyInputSchema,
+    minimumPayment: MoneyInputSchema,
 
     status: ReservationStatusSchema.default("pending"),
 
