@@ -28,6 +28,7 @@ import { useCreatePayment } from "../hooks/useCreatePayment";
 
 import { Banknote, CreditCard, Wallet } from "lucide-react";
 import { useEffect, useMemo } from "react";
+import { getTotalPaid } from "@/utils/getTotalPaid";
 
 type Props = {
   reservation: ReservationWithRelations;
@@ -37,31 +38,31 @@ type Props = {
 const AddPaymentForm = ({ reservation, setOpen }: Props) => {
   const { mutateAsync: createPayment, isPending } = useCreatePayment();
 
-  const totalPaid = reservation.payments.reduce(
-    (total, payment) => total + payment.amount,
-    0,
-  );
-
+  const totalPaid = getTotalPaid(reservation);
   const remainingBalance = Math.max(0, reservation.total_amount - totalPaid);
+
+  const minPaymentAllowed =
+    totalPaid === 0 ? (reservation.minimum_payment ?? 0) : 0.01;
+  const initialAmount =
+    totalPaid === 0 ? (reservation.minimum_payment ?? 0) : 0;
 
   const form = useForm<CreatePaymentBody>({
     resolver: zodResolver(CreatePaymentBodySchema),
     defaultValues: {
       reservationId: reservation.id,
-      amount: 0,
+      amount: initialAmount,
       method: "cash",
     },
   });
 
   const amount = form.watch("amount");
-
   const amountNumber = Number(amount) || 0;
 
   const paymentMethods = PaymentMethodSchema.options;
 
   const isAmountValid =
     Number.isFinite(amountNumber) &&
-    amountNumber > 0 &&
+    amountNumber >= minPaymentAllowed &&
     amountNumber <= remainingBalance &&
     Math.round(amountNumber * 100) === amountNumber * 100;
 
@@ -75,7 +76,17 @@ const AddPaymentForm = ({ reservation, setOpen }: Props) => {
   }, [form.formState.errors]);
 
   const onSubmit = async (data: CreatePaymentBody) => {
-    if (Number(data.amount) > remainingBalance) {
+    const paymentAmount = Number(data.amount);
+
+    if (paymentAmount < minPaymentAllowed) {
+      form.setError("amount", {
+        type: "validate",
+        message: `Minimum payment required is ${currencyFormatter.format(minPaymentAllowed)}.`,
+      });
+      return;
+    }
+
+    if (paymentAmount > remainingBalance) {
       form.setError("amount", {
         type: "validate",
         message: "Payment cannot exceed the remaining balance.",
@@ -85,7 +96,7 @@ const AddPaymentForm = ({ reservation, setOpen }: Props) => {
 
     await createPayment({
       ...data,
-      amount: Number(data.amount),
+      amount: paymentAmount,
     });
 
     setOpen(false);
@@ -223,7 +234,7 @@ const AddPaymentForm = ({ reservation, setOpen }: Props) => {
               id="payment-amount"
               type="number"
               inputMode="decimal"
-              min="0.01"
+              min={minPaymentAllowed}
               max={remainingBalance}
               step="0.01"
               placeholder="0.00"
@@ -245,7 +256,8 @@ const AddPaymentForm = ({ reservation, setOpen }: Props) => {
             <FieldError errors={[form.formState.errors.amount]} />
 
             <span className="shrink-0 text-xs text-muted-foreground">
-              Max. {currencyFormatter.format(remainingBalance)}
+              Min. {currencyFormatter.format(minPaymentAllowed)} | Max.{" "}
+              {currencyFormatter.format(remainingBalance)}
             </span>
           </div>
         </div>
@@ -276,7 +288,7 @@ const AddPaymentForm = ({ reservation, setOpen }: Props) => {
 
           <Button
             type="submit"
-            disabled={isPending || !isAmountValid || remainingBalance <= 0}
+            disabled={isPending || remainingBalance <= 0}
             className="sm:min-w-36 text-foreground"
           >
             <ButtonLoader isLoading={isPending}>Save payment</ButtonLoader>

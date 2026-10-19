@@ -196,7 +196,7 @@ const ReservationDetailsDialog = ({
                     className={"flex-1 text-foreground"}
                     onClick={() => setAddingPayment(true)}
                   >
-                    Add Payment
+                    {totalPaid === 0 ? "Add Initial Payment" : "Add Payment"}
                   </Button>
                 )}
               </div>
